@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quotes Penguat Hati</title>
+  <style>
+    /* Reset ringan */
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Segoe UI Emoji", "Segoe UI Symbol";
+      background: #0f172a; /* slate-900 */
+      color: #e5e7eb;      /* gray-200 */
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* Kartu utama */
+    .card {
+      width: min(780px, 100%);
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .title {
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      font-size: 18px;
+      color: #93c5fd; /* blue-300 */
+    }
+
+    /* Quote area */
+    .quote-wrap {
+      position: relative;
+      min-height: 140px;
+      padding: 16px 0;
+    }
+    .quote {
+      font-size: clamp(18px, 2.6vw, 24px);
+      line-height: 1.55;
+      color: #fafafa;
+      white-space: pre-wrap;
+    }
+    .index {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #cbd5e1; /* slate-300 */
+    }
+
+    /* Tombol */
+    .actions, .nav {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+    button {
+      appearance: none;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.08);
+      color: #e5e7eb;
+      padding: 10px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: transform 0.12s ease, background 0.2s ease, border-color 0.2s ease;
+    }
+    button:hover {
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.35);
+    }
+    button:active { transform: translateY(0); }
+    .primary {
+      background: #2563eb;  /* blue-600 */
+      border-color: #1d4ed8;
+    }
+    .primary:hover {
+      background: #1e40af;  /* blue-800 */
+      border-color: #1e40af;
+    }
+
+    /* Footer kecil */
+    .footer {
+      margin-top: 14px;
+      font-size: 12px;
+      color: #94a3b8; /* slate-400 */
+    }
+
+    /* Toggle mode */
+    .toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #cbd5e1;
+    }
+    .switch {
+      width: 42px;
+      height: 24px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.18);
+      position: relative;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .dot {
+      width: 18px;
+      height: 18px;
+      background: #e5e7eb;
+      border-radius: 50%;
+      position: absolute;
+      top: 2.5px;
+      left: 3px;
+      transition: left 0.2s;
+    }
+    .switch.active {
+      background: #22c55e22;
+      border-color: #22c55e;
+    }
+    .switch.active .dot { left: 21px; }
+
+    /* Mode terang */
+    .light {
+      background: #f8fafc; /* slate-50 */
+      color: #0f172a;       /* slate-900 */
+    }
+    .light .card {
+      background: #ffffff;
+      border-color: #e2e8f0;
+      box-shadow: 0 12px 24px rgba(2,6,23,0.08);
+    }
+    .light .title { color: #1e40af; }
+    .light .quote { color: #0f172a; }
+    .light button {
+      background: #f1f5f9;
+      color: #0f172a;
+      border-color: #e2e8f0;
+    }
+    .light button:hover {
+      background: #e2e8f0;
+      border-color: #cbd5e1;
+    }
+    .light .index { color: #475569; }
+    .light .footer { color: #64748b; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="header">
+      <div class="title">Quotes Penguat Hati</div>
+      <div class="toggle">
+        <span>Mode terang</span>
+        <div id="switch" class="switch" aria-label="Toggle mode">
+          <div class="dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="quote-wrap">
+      <div id="quote" class="quote" aria-live="polite"></div>
+      <div id="index" class="index"></div>
+    </div>
+
+    <div class="nav">
+      <button id="prev">Sebelumnya</button>
+      <button id="random" class="primary">Acak</button>
+      <button id="next">Berikutnya</button>
+    </div>
+
+    <div class="actions">
+      <button id="copy">Salin</button>
+      <button id="share">Bagikan</button>
+    </div>
+
+    <div class="footer">Tetap pelan, tetap jujur pada diri sendiri.</div>
+  </div>
+
+  <script>
+    // Daftar quotes
+    const quotes = [
+      "“Tidak semua lelah harus dijelaskan, ada yang cukup diterima dan dilanjutkan.”",
+      "“Kamu tidak tertinggal, kamu hanya berjalan dengan ritmemu sendiri.”",
+      "“Kadang yang kita butuhkan bukan jawaban, tapi keberanian untuk tetap bertahan.”",
+      "“Tenang bukan berarti menyerah, tapi memilih untuk tidak hancur.”",
+      "“Tidak apa-apa jika hari ini kamu belum kuat, besok selalu memberi kesempatan baru.”",
+      "“Hal kecil yang kamu lakukan hari ini bisa menjadi penyelamatmu di masa depan.”",
+      "“Berhenti sejenak bukan mundur, itu cara hati bernapas.”",
+      "“Tidak semua orang akan mengerti perjuanganmu, dan itu tidak mengurangi nilainya.”",
+      "“Kamu berhak bahagia tanpa harus menjelaskan lukamu pada siapa pun.”",
+      "“Selama kamu masih mencoba, harapan belum pernah pergi.”"
+    ];
+
+    // State awal
+    let current = 0;
+    const elQuote = document.getElementById('quote');
+    const elIndex = document.getElementById('index');
+    const btnPrev = document.getElementById('prev');
+    const btnNext = document.getElementById('next');
+    const btnRandom = document.getElementById('random');
+    const btnCopy = document.getElementById('copy');
+    const btnShare = document.getElementById('share');
+    const switchEl = document.getElementById('switch');
+
+    // Efek ketik sederhana
+    function typeText(text, target) {
+      target.textContent = '';
+      let i = 0;
+      const speed = 18; // ms per karakter
+      const timer = setInterval(() => {
+        target.textContent += text[i];
+        i++;
+        if (i >= text.length) clearInterval(timer);
+      }, speed);
+    }
+
+    // Render quote berdasarkan index
+    function render(idx) {
+      current = (idx + quotes.length) % quotes.length;
+      typeText(quotes[current], elQuote);
+      elIndex.textContent = `Quote ${current + 1} dari ${quotes.length}`;
+      // Simpan terakhir dibaca di localStorage
+      try { localStorage.setItem('lastQuoteIndex', String(current)); } catch {}
+    }
+
+    // Navigasi
+    btnPrev.addEventListener('click', () => render(current - 1));
+    btnNext.addEventListener('click', () => render(current + 1));
+    btnRandom.addEventListener('click', () => {
+      let r = Math.floor(Math.random() * quotes.length);
+      if (quotes.length > 1 && r === current) r = (r + 1) % quotes.length;
+      render(r);
+    });
+
+    // Salin ke clipboard
+    btnCopy.addEventListener('click', async () => {
+      const text = `${quotes[current]} — Quotes Penguat Hati`;
+      try {
+        await navigator.clipboard.writeText(text);
+        btnCopy.textContent = 'Tersalin!';
+        setTimeout(() => (btnCopy.textContent = 'Salin'), 1200);
+      } catch {
+        // Fallback untuk browser yang membatasi clipboard
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        btnCopy.textContent = 'Tersalin!';
+        setTimeout(() => (btnCopy.textContent = 'Salin'), 1200);
+      }
+    });
+
+    // Bagikan (Web Share API jika ada)
+    btnShare.addEventListener('click', async () => {
+      const text = quotes[current];
+      const shareData = {
+        title: 'Quotes Penguat Hati',
+        text,
+      };
+      if (navigator.share) {
+        try {
+          await navigator.share(shareData);
+        } catch {
+          // batal atau gagal: tidak perlu apa-apa
+        }
+      } else {
+        // Fallback: salin kemudian beri notifikasi kecil
+        try {
+          await navigator.clipboard.writeText(text);
+          btnShare.textContent = 'Tautan/teks tersalin';
+          setTimeout(() => (btnShare.textContent = 'Bagikan'), 1200);
+        } catch {
+          alert('Fitur bagikan tidak tersedia. Teks sudah disiapkan untuk disalin.');
+        }
+      }
+    });
+
+    // Toggle mode terang/gelap
+    function setLightMode(on) {
+      document.body.classList.toggle('light', on);
+      switchEl.classList.toggle('active', on);
+      try { localStorage.setItem('lightMode', on ? '1' : '0'); } catch {}
+    }
+    switchEl.addEventListener('click', () => {
+      setLightMode(!document.body.classList.contains('light'));
+    });
+
+    // Inisialisasi dari localStorage
+    (function init() {
+      let startIdx = 0;
+      try {
+        const saved = localStorage.getItem('lastQuoteIndex');
+        if (saved !== null) startIdx = Number(saved) || 0;
+        const lm = localStorage.getItem('lightMode') === '1';
+        setLightMode(lm);
+      } catch {}
+      render(startIdx);
+    })();
+  </script>
+  <audio src="hujan.mp3" controls autoplay></audio>
+</body>
+</html>
